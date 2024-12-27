@@ -2,8 +2,8 @@ package com.xyz.interviewConnect.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.xyz.interviewConnect.model.entity.QuestionBankQuestion;
-import generator.service.QuestionBankQuestionService;
 import com.xyz.interviewConnect.mapper.QuestionBankQuestionMapper;
+import com.xyz.interviewConnect.service.QuestionBankQuestionService;
 import org.springframework.stereotype.Service;
 
 /**
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 */
 @Service
 public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQuestionMapper, QuestionBankQuestion>
-    implements QuestionBankQuestionService{
+    implements QuestionBankQuestionService {
 
 }
 
