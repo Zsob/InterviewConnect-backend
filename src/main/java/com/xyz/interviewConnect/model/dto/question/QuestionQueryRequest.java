@@ -1,6 +1,8 @@
 package com.xyz.interviewConnect.model.dto.question;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.xyz.interviewConnect.common.PageRequest;
+import com.xyz.interviewConnect.model.entity.Question;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -55,6 +57,11 @@ public class QuestionQueryRequest extends PageRequest implements Serializable {
      * 创建用户 id
      */
     private Long userId;
+
+    /**
+     * 题库编号
+     */
+    private Long questionBankId;
 
     private static final long serialVersionUID = 1L;
 }

@@ -160,7 +160,6 @@ public class QuestionController {
         // 查询数据库
         Question question = questionService.getById(id);
         ThrowUtils.throwIf(question == null, ErrorCode.NOT_FOUND_ERROR);
-        // 是否要关联查询题库下的题目列表
         // 获取封装类
         return ResultUtils.success(questionService.getQuestionVO(question, request));
     }
@@ -174,28 +173,8 @@ public class QuestionController {
     @PostMapping("/list/page")
     @AuthCheck(mustRole = UserConstant.ADMIN_ROLE)
     public BaseResponse<Page<Question>> listQuestionByPage(@RequestBody QuestionQueryRequest questionQueryRequest) {
-        long current = questionQueryRequest.getCurrent();
-        long size = questionQueryRequest.getPageSize();
-        QueryWrapper<Question> queryWrapper = questionService.getQueryWrapper(questionQueryRequest);
-        // 根据题库编号查找题目列表
-        Long questionBankId = questionQueryRequest.getQuestionBankId();
-        if (questionBankId != null) {
-            // 设置查询条件
-            LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = new LambdaQueryWrapper<QuestionBankQuestion>()
-                    .select(QuestionBankQuestion::getQuestionId)
-                    .eq(QuestionBankQuestion::getQuestionBankId, questionBankId);
-            List<QuestionBankQuestion> questionList = questionBankQuestionService.list(lambdaQueryWrapper);
-            // 将查询结果转化成set
-            if (CollUtil.isNotEmpty(questionList)) {
-                Set<Long> questionSet = questionList.stream()
-                        .map(QuestionBankQuestion::getQuestionId)
-                        .collect(Collectors.toSet());
-                queryWrapper.in("id",questionSet);
-            }
-        }
-        // 查询数据库
-        Page<Question> questionPage = questionService.page(new Page<>(current, size),
-                queryWrapper);
+        ThrowUtils.throwIf(questionQueryRequest==null,ErrorCode.PARAMS_ERROR);
+        Page<Question> questionPage=questionService.listQuestionByPage(questionQueryRequest);
         return ResultUtils.success(questionPage);
     }
 
