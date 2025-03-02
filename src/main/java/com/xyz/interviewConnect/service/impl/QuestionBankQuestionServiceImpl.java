@@ -4,18 +4,25 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.xyz.interviewConnect.common.ErrorCode;
 import com.xyz.interviewConnect.constant.CommonConstant;
+import com.xyz.interviewConnect.exception.ThrowUtils;
 import com.xyz.interviewConnect.mapper.QuestionBankQuestionMapper;
 import com.xyz.interviewConnect.model.dto.questionBankQuestion.QuestionBankQuestionQueryRequest;
+import com.xyz.interviewConnect.model.entity.Question;
+import com.xyz.interviewConnect.model.entity.QuestionBank;
 import com.xyz.interviewConnect.model.entity.QuestionBankQuestion;
 import com.xyz.interviewConnect.model.entity.User;
 import com.xyz.interviewConnect.model.vo.QuestionBankQuestionVO;
 import com.xyz.interviewConnect.model.vo.UserVO;
 import com.xyz.interviewConnect.service.QuestionBankQuestionService;
+import com.xyz.interviewConnect.service.QuestionBankService;
+import com.xyz.interviewConnect.service.QuestionService;
 import com.xyz.interviewConnect.service.UserService;
 import com.xyz.interviewConnect.utils.SqlUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ObjectUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -37,6 +44,13 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
     @Resource
     private UserService userService;
 
+    @Resource
+    @Lazy
+    private QuestionService questionService;
+
+    @Resource
+    private QuestionBankService questionBankService;
+
     /**
      * 校验数据
      *
@@ -45,9 +59,18 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
      */
     @Override
     public void validQuestionBankQuestion(QuestionBankQuestion questionBankQuestion, boolean add) {
-        // 不需要校验
-        //ThrowUtils.throwIf(questionBankQuestion == null, ErrorCode.PARAMS_ERROR);
+        ThrowUtils.throwIf(questionBankQuestion == null, ErrorCode.PARAMS_ERROR);
         //// todo 从对象中取值
+        Long questionId = questionBankQuestion.getQuestionId();
+        if (questionId!=null){
+            Question question = questionService.getById(questionId);
+            ThrowUtils.throwIf(question==null,ErrorCode.PARAMS_ERROR);
+        }
+        Long questionBankId = questionBankQuestion.getQuestionBankId();
+        if (questionBankId!=null){
+            QuestionBank questionBank = questionBankService.getById(questionBankId);
+            ThrowUtils.throwIf(questionBank==null,ErrorCode.PARAMS_ERROR);
+        }
         //String title = questionBankQuestion.getTitle();
         //// 创建数据时，参数不能为空
         //if (add) {

@@ -6,7 +6,10 @@ import com.xyz.interviewConnect.model.dto.user.UserQueryRequest;
 import com.xyz.interviewConnect.model.entity.User;
 import com.xyz.interviewConnect.model.vo.LoginUserVO;
 import com.xyz.interviewConnect.model.vo.UserVO;
+
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import me.chanjar.weixin.common.bean.WxOAuth2UserInfo;
 
@@ -117,4 +120,18 @@ public interface UserService extends IService<User> {
      */
     QueryWrapper<User> getQueryWrapper(UserQueryRequest userQueryRequest);
 
+    /**
+     * 添加用户签到记录
+     * @param userId 用户id
+     * @return 当前是否签到成功
+     */
+    boolean addUserSignIn(Long userId);
+
+    /**
+     * 获取用户某一年份签到记录
+     * @param userId
+     * @param year
+     * @return
+     */
+    List<Integer> getUserSignInRecord(long userId,Integer year);
 }
