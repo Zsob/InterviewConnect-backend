@@ -210,13 +210,14 @@ public class QuestionServiceImpl extends ServiceImpl<QuestionMapper, Question> i
         QueryWrapper<Question> queryWrapper = this.getQueryWrapper(questionQueryRequest);
         // 根据题库编号查找题目列表
         Long questionBankId = questionQueryRequest.getQuestionBankId();
+        // 如果 questionBankId 不为空，则查询该题库的题目；否则全量查询
         if (questionBankId != null) {
             // 设置查询条件
             LambdaQueryWrapper<QuestionBankQuestion> lambdaQueryWrapper = new LambdaQueryWrapper<QuestionBankQuestion>()
                     .select(QuestionBankQuestion::getQuestionId)
                     .eq(QuestionBankQuestion::getQuestionBankId, questionBankId);
             List<QuestionBankQuestion> questionList = questionBankQuestionService.list(lambdaQueryWrapper);
-            // 将查询结果转化成set
+            // todo (若题库为空，会返回所有题目信息)将查询结果转化成set
             if (CollUtil.isNotEmpty(questionList)) {
                 Set<Long> questionSet = questionList.stream()
                         .map(QuestionBankQuestion::getQuestionId)
