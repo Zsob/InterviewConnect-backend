@@ -228,10 +228,9 @@ public class QuestionBankQuestionServiceImpl extends ServiceImpl<QuestionBankQue
                 .in(QuestionBankQuestion::getQuestionId, validQuestionIdList);
         List<QuestionBankQuestion> existQuestionIdList = this.list(lambdaQueryWrapper);
         // 已存在于题库中的题目 id
-        List<Long> existQuestionIdSet = existQuestionIdList.stream()
+        Set<Long> existQuestionIdSet = existQuestionIdList.stream()
                 .map(QuestionBankQuestion::getQuestionId)
-                .collect(Collectors.toList());
-        ThrowUtils.throwIf(CollUtil.isEmpty(existQuestionIdSet),ErrorCode.PARAMS_ERROR,"所有题目都已存在题库中");
+                .collect(Collectors.toSet());
         // 已存在于题库中的题目 id，不需要再次添加
         validQuestionIdList=validQuestionIdList.stream().filter(questionId->{
             return !existQuestionIdSet.contains(questionId);
